@@ -11,11 +11,13 @@ import org.springframework.stereotype.Repository;
     @Repository
     public interface ArlnTransmissionRepository extends ElasticsearchRepository<ArlnTransmission, String> {
 
+       // Iterable<ArlnTransmission> findByMetaProgram(String name);
 
-        Page<ArlnTransmission> findByTransmissionMetaProgramName(String name, Pageable pageable);
+
+
 
         @Query("{\"bool\": {\"must\": [{\"match\": {\"meta_program\": \"?0\"}}]}}")
-        Page<ArlnTransmission> findByMeta_programUsingCustomQuery(String name, Pageable pageable);
+        Iterable<ArlnTransmission> findByMeta_programUsingCustomQuery(String name);
 
 
 

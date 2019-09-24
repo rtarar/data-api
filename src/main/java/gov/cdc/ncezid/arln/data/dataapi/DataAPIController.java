@@ -1,6 +1,7 @@
 package gov.cdc.ncezid.arln.data.dataapi;
 
 import gov.cdc.ncezid.arln.data.dataapi.es.model.ArlnTransmission;
+import gov.cdc.ncezid.arln.data.dataapi.es.model.Message;
 import gov.cdc.ncezid.arln.data.dataapi.es.service.ArlnTransmissionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,9 +35,24 @@ public class DataAPIController {
     )
     @GetMapping(value = "/transmissions", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ArlnTransmission>> getLanguages() {
-        final List<ArlnTransmission> arlnTransmissions = service.findAll();
-        return new ResponseEntity<>(arlnTransmissions, HttpStatus.OK);
+        //final Iterable<ArlnTransmission> arlnTransmissions = service.findAll();
+        final Iterable<ArlnTransmission> arlnTransmissions = service.findByMeta_programUsingCustomQuery("DHQP1");
+        int sa = 0;
+        System.out.println("TEsting");
+        return null;
     }
+
+    @GetMapping(value = "/info" , produces = MediaType.APPLICATION_JSON_VALUE )
+    public ResponseEntity<Message> getInfo() {
+        final Message m = new Message("I am alive!!!");
+        ArlnTransmission a = new ArlnTransmission();
+        a.setMeta_recorduid("12345");
+        a.setMeta_program("DHQP");
+        service.save(a);
+        return new ResponseEntity<>(m, HttpStatus.OK);
+    }
+
+
 
 
 }

@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: data-api
+  profiles:
+    active: local-dev
+
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+  port: 10001
+  servlet:
+    context-path: /data-api
+
+---
+spring:
+  name: local-dev
+  environment: dev
+  data:
+
+    elasticsearch:
+
+      properties:
+        - cluster-name="docker-cluster"
+        - cluster-nodes="localhost:9200"
+        - path.home=target/elastic-embedded
+        - transport.tcp.connect_timeout=60s
+
+---
+spring:
+  name: local-eksdev
+  environment: eksdev
+  elasticsearch:
+    properties:
+      - cluster-name="elasticsearch"
+      - cluster-nodes="elasticsearch-headless:9200"
+      - path.home=target/elastic-embedded
+      - transport.tcp.connect_timeout=60s

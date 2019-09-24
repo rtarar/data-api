@@ -22,36 +22,35 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @ComponentScan(basePackages = { "gov.cdc.ncezid.arln.data.dataapi.es.service" })
 public class Config {
 
-    @Value("${elasticsearch.home:/usr/local/Cellar/elasticsearch/5.6.0}")
-    private String elasticsearchHome;
+    //@Value("${elasticsearch.home:/usr/local/Cellar/elasticsearch/5.6.0}")
+   // private String elasticsearchHome;
 
-    @Value("${elasticsearch.cluster.name:elasticsearch}")
-    private String clusterName;
+    //@Value("${elasticsearch.cluster.name:elasticsearch}")
+    //private String clusterName;
 
     @Bean
     public Client client() {
        TransportClient client = null;
 
         try {
-            client = new PreBuiltTransportClient(Settings.EMPTY)
-                .addTransportAddress(new TransportAddress(InetAddress.getByName("localhost"), 9300))
-                .addTransportAddress(new TransportAddress(InetAddress.getByName("localhost"), 9300));
 
 
             final Settings elasticsearchSettings = Settings.builder()
                     .put("client.transport.sniff", true)
-                    .put("path.home", elasticsearchHome)
-                    .put("cluster.name", clusterName).build();
-            client = new PreBuiltTransportClient(elasticsearchSettings);
-           // client.addTransportAddress(new TransportAddress()new InetSocketTransportAddress(InetAddress.getByName("127.0.0.1"), 9300));
+                    .put("path.home", "/.")
+                    .put("cluster.name", "docker-cluster").build();
+
+            client = new PreBuiltTransportClient(elasticsearchSettings)
+                .addTransportAddress(new TransportAddress(InetAddress.getByName("127.0.0.1"), 9300));
+
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         return client;
     }
 
-    //@Bean
-    //public ElasticsearchOperations elasticsearchTemplate() {
-    //    return new ElasticsearchTemplate(client());
-    //}
+   @Bean
+    public ElasticsearchOperations elasticsearchTemplate1() {
+        return new ElasticsearchTemplate(client());
+    }
 }

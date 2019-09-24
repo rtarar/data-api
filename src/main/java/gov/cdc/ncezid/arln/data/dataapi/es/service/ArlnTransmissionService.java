@@ -18,9 +18,15 @@ public interface ArlnTransmissionService {
 
     //Iterable<ArlnTransmission> findAll();
 
-    List<ArlnTransmission> findAll();
+   // Iterable<ArlnTransmission> findByMetaProgram(String name);
 
-    Iterable<ArlnTransmission>  findByMeta_programUsingCustomQuery(String name, Pageable pageable);
+
+
+    Iterable<ArlnTransmission> findAll();
+
+    int save(ArlnTransmission transmission);
+
+   Iterable<ArlnTransmission>  findByMeta_programUsingCustomQuery(String name);
 
     long count();
 

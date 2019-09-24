@@ -2,7 +2,10 @@ package gov.cdc.ncezid.arln.data.dataapi.es.service;
 
 import gov.cdc.ncezid.arln.data.dataapi.es.model.ArlnTransmission;
 import gov.cdc.ncezid.arln.data.dataapi.es.repository.ArlnTransmissionRepository;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.common.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,8 @@ import java.util.Optional;
 @Service
 public class ArlnTransmissionServiceImpl implements ArlnTransmissionService {
 
+    Logger log = LoggerFactory.getLogger(ArlnTransmissionServiceImpl.class);
+
     @Autowired
    ArlnTransmissionRepository transmissionRepository;
 
@@ -24,10 +29,29 @@ public class ArlnTransmissionServiceImpl implements ArlnTransmissionService {
 */
    // public ArlnTransmissionServiceImpl(){}
 
+    @Override
+    public int save(ArlnTransmission transmission){
+        try {
+            log.info("Saving message to Index Record UID: "+transmission.getMeta_recorduid());
+            transmissionRepository.save(transmission);
+
+        }catch(ElasticsearchException ese){
+            ese.printStackTrace();
+            return -1;
+        }
+        return 1;
+    }
+
+
+ /*   @Override
+    public Iterable<ArlnTransmission> findByMetaProgram(String name){
+        return transmissionRepository.findByMetaProgram(name);
+    }
+*/
 
     @Override
-    public List<ArlnTransmission> findAll() {
-        return (List<ArlnTransmission>) transmissionRepository.findAll();
+    public Iterable<ArlnTransmission> findAll() {
+        return transmissionRepository.findAll();
     }
 
     @Override
@@ -35,10 +59,9 @@ public class ArlnTransmissionServiceImpl implements ArlnTransmissionService {
         return transmissionRepository.findById(id);
     }
 
-    public Iterable<ArlnTransmission>  findByMeta_programUsingCustomQuery(String name, Pageable pageable){
-        return transmissionRepository.findByMeta_programUsingCustomQuery(name,pageable);
+   public Iterable<ArlnTransmission>  findByMeta_programUsingCustomQuery(String name){
+        return transmissionRepository.findByMeta_programUsingCustomQuery(name);
     }
-
    /* @Override
     public Page<ArlnTransmission> findByAuthorName(String name, Pageable pageable) {
         return transmissionRepository.findByAuthorsName(name, pageable);
